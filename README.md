@@ -1,2 +1,2 @@
 # LMSVideoService
-Амин страшный чуркабес, жестко накодил говна
+This project serves to manage videos.
