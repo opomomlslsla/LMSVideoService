@@ -13,7 +13,13 @@ namespace VideoService.Domain.Models
         [BsonId]
         public string Id { get; set; }
         public string Name { get; set; }
-        public string? DocumentId{ get; set; }
+        public Guid? DocumentId{ get; private set; }
         public bool IsConnectedToDocument { get; set; }
+
+        public void SetDocementId(Guid? documentId)
+        {
+            if(IsConnectedToDocument && documentId != null)
+            DocumentId = documentId;
+        }
     }
 }

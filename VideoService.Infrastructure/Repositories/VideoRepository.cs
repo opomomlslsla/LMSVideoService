@@ -4,8 +4,7 @@ using MongoDB.Driver;
 using Microsoft.Extensions.Options;
 using VideoService.Domain.Models;
 using VideoService.Domain.DTO;
-
-
+using Amazon.Runtime.SharedInterfaces;
 
 namespace VideoService.Infrastructure.Repositories
 {
@@ -52,23 +51,27 @@ namespace VideoService.Infrastructure.Repositories
             var fileStream = videoModelDTO.formfile.OpenReadStream();
             string id = (await _GridFSBucket.UploadFromStreamAsync(videoModelDTO.formfile.FileName, fileStream)).ToString();
             
-            VideoModel vidModel = new VideoModel
+            VideoModel videoModel = new VideoModel
             {
                 Name = videoModelDTO.formfile.FileName,
                 Id = id,
-                DocumentId = videoModelDTO.DocumentID,
-                IsConnectedToDocument = videoModelDTO.IsConnectedToDocument,
+                IsConnectedToDocument = videoModelDTO.IsConnectedToDocument
             };
 
-            await _VideosCollection.InsertOneAsync(vidModel);
-            return vidModel;
+            videoModel.SetDocementId(videoModelDTO.DocumentID);
+
+            await _VideosCollection.InsertOneAsync(videoModel);
+            return videoModel;
         }
 
+        /*
         public Task UpdateF(VideoModel video)
         {
             var filter = Builders<VideoModel>.Filter.Eq("Id", video.Id);
             return _VideosCollection.ReplaceOneAsync(filter, video, new ReplaceOptions { IsUpsert = true });
         }
+        */
+
 
         public async void DeleteVideo(string id)
         {

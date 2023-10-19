@@ -42,16 +42,16 @@ namespace VIdeoService.API.Controllers
 
         [HttpPost]
         [RequestSizeLimit(5368709120)]
-        public async Task<IActionResult> AddVideo([FromForm] VideoModelDTO vidMod)
+        public async Task<IActionResult> AddVideo([FromForm] VideoModelDTO videoModelDTO)
         {
-            var bob = await VideoTest(vidMod);
+            var bob = await VideoTest(videoModelDTO);
 
-            if (!vidMod.formfile.ContentType.Contains("video") || vidMod.formfile.Length == 0 || !bob.IsSuccessStatusCode)
+            if (!videoModelDTO.formfile.ContentType.Contains("video") || videoModelDTO.formfile.Length == 0 || !bob.IsSuccessStatusCode)
             {
                 return BadRequest("некорректный или опасный файл");
             }
              
-            var res = await _VideoRepository.AddVideoToMongo(vidMod);
+            var res = await _VideoRepository.AddVideoToMongo(videoModelDTO);
             return Ok("видео загружено");
         }
 
