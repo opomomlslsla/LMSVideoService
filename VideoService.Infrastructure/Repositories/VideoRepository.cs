@@ -50,15 +50,14 @@ namespace VideoService.Infrastructure.Repositories
         {
             var fileStream = videoModelDTO.formfile.OpenReadStream();
             string id = (await _GridFSBucket.UploadFromStreamAsync(videoModelDTO.formfile.FileName, fileStream)).ToString();
-            
+
             VideoModel videoModel = new VideoModel
             {
                 Name = videoModelDTO.formfile.FileName,
                 Id = id,
-                IsConnectedToDocument = videoModelDTO.IsConnectedToDocument
+                IsConnectedToDocument = videoModelDTO.IsConnectedToDocument,
+                DocumentId = videoModelDTO.DocumentId
             };
-
-            videoModel.SetDocementId(videoModelDTO.DocumentID);
 
             await _VideosCollection.InsertOneAsync(videoModel);
             return videoModel;
