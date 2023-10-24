@@ -30,8 +30,6 @@ namespace VideoService.Infrastructure.Repositories
         
         public async Task<Stream> GetVideoById(string id)
         {
-            var result = await _VideosCollection.Find(i => i.Id == id).FirstOrDefaultAsync();
-
             Stream videoStream = await _GridFSBucket.OpenDownloadStreamAsync(new ObjectId(id));
 
             return videoStream;
@@ -42,7 +40,7 @@ namespace VideoService.Infrastructure.Repositories
         public async Task<VideoModel> GetVideoModelById(string id)
         {
             ObjectId _id = new ObjectId(id);
-            var result = await _VideosCollection.Find(i => i.Id == id).FirstOrDefaultAsync();
+            var result = await _VideosCollection.Find(i => i.Id == _id).FirstOrDefaultAsync();
             return result;
         }
 
@@ -54,7 +52,7 @@ namespace VideoService.Infrastructure.Repositories
             VideoModel videoModel = new VideoModel
             {
                 Name = videoModelDTO.formfile.FileName,
-                Id = id,
+                Id = new ObjectId(id),
                 IsConnectedToDocument = videoModelDTO.IsConnectedToDocument,
                 DocumentId = videoModelDTO.DocumentId
             };
@@ -74,7 +72,8 @@ namespace VideoService.Infrastructure.Repositories
 
         public async void DeleteVideo(string id)
         {
-            await _VideosCollection.DeleteOneAsync(i => i.Id == id);
+            var _id = new ObjectId(id);
+            await _VideosCollection.DeleteOneAsync(i => i.Id == _id);
             await _GridFSBucket.DeleteAsync(new ObjectId(id));
         }
     }

@@ -52,7 +52,7 @@ namespace VIdeoService.API.Controllers
             }
              
             var res = await _VideoRepository.AddVideoToMongo(videoModelDTO);
-            return Ok("видео загружено");
+            return Ok($"видео загружено id:{res.Id}");
         }
 
         /*

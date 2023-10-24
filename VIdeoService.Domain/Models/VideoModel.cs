@@ -1,29 +1,27 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VideoService.Domain.Models
 {
     public class VideoModel
     {
-        private Guid? documentId;
         [BsonId]
-        public string Id { get; set; }
+        public ObjectId Id { get; set; }
         public string Name { get; set; }
+        public bool IsConnectedToDocument { get; set; }
+        private Guid? documentId;
         public Guid? DocumentId
         {
             get { return documentId; }
             set
             {
-                if (IsConnectedToDocument && value != null)
+                if (IsConnectedToDocument)
+                {
+                    documentId = value;
+                }
+                else
                     documentId = value;
             }
         }
-        public bool IsConnectedToDocument { get; set; }
-
     }
 }
